@@ -1,0 +1,39 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: copilot-metric-viewer
+  namespace: copilot-metric-viewer
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: copilot-metrics-viewer.prod.smartdev.dev
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: copilot-metric-viewer
+            port:
+              number: 3000
+  tls:
+  - hosts:
+    - copilot-metrics-viewer.prod.smartdev.dev
+    secretName: copilot-metric-viewer-tls
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: copilot-metric-viewer-tls
+  namespace: copilot-metric-viewer
+spec:
+  secretName: copilot-metric-viewer-tls
+  commonName: copilot-metrics-viewer.prod.smartdev.dev
+  dnsNames:
+  - copilot-metrics-viewer.prod.smartdev.dev
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

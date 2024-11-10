@@ -13,3 +13,5 @@ dist/
 .github/
 Dockerfile
 *.md
+
+.configmap.yml
